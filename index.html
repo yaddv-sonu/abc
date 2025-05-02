@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slap Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #4fc3f7 0%, #1976d2 100%);
+            font-family: 'Fredoka One', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            margin-top: 24px;
+            background: #ff9800;
+            color: #fff;
+            font-size: 2.2rem;
+            border-radius: 24px;
+            padding: 16px 40px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .feedback-bar, .boss-bar {
+            margin-top: 18px;
+            background: #f44336;
+            color: #fff;
+            font-size: 1.3rem;
+            border-radius: 18px;
+            padding: 10px 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            text-align: center;
+            min-width: 220px;
+        }
+        .boss-bar {
+            background: #e53935;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        .progress-container {
+            margin: 24px 0 0 0;
+            width: 260px;
+            height: 22px;
+            background: #1976d2;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .progress-bar {
+            height: 16px;
+            background: #ff9800;
+            border-radius: 12px;
+            transition: width 0.3s;
+            width: 0%;
+            margin-left: 3px;
+        }
+        .game-canvas-container {
+            margin: 24px 0 0 0;
+            background: #fff;
+            border-radius: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 420px;
+            height: 340px;
+            position: relative;
+        }
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .slap-btn {
+            margin: 32px 0 24px 0;
+            background: #ff5252;
+            color: #fff;
+            font-size: 2rem;
+            font-family: 'Fredoka One', Arial, sans-serif;
+            border: none;
+            border-radius: 32px;
+            padding: 18px 80px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .slap-btn:active {
+            background: #e53935;
+            transform: scale(0.97);
+        }
+        #slap-effect {
+            position: absolute;
+            display: none;
+            pointer-events: none;
+            z-index: 2000;
+        }
+        @media (max-width: 500px) {
+            .game-canvas-container {
+                width: 98vw;
+                height: 50vw;
+                min-height: 220px;
+                min-width: 180px;
+            }
+            .header, .feedback-bar, .boss-bar {
+                font-size: 1.1rem;
+                padding: 10px 10px;
+            }
+            .slap-btn {
+                font-size: 1.2rem;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">SLAP YOUR BOSS</div>
+    <div class="feedback-bar" id="feedback-bar" style="display:none;">AMAN JUST SLAPPED!</div>
+    <div class="boss-bar" id="boss-bar" style="display:none;">RAMESH!</div>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="game-canvas-container">
+        <svg id="slap-effect" width="60" height="60" viewBox="0 0 60 60">
+          <polygon
+            points="30,5 36,20 55,15 40,28 55,40 36,38 30,55 24,38 5,40 20,28 5,15 24,20"
+            fill="orange"
+            stroke="#ff9800"
+            stroke-width="3"
+            filter="drop-shadow(0 0 8px #ff9800)"
+          />
+        </svg>
+    </div>
+    <button class="slap-btn" id="slap-btn">SLAP</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="game.js"></script>
+    <script src="scene.js"></script>
+</body>
+</html> 
