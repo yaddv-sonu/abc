@@ -14,7 +14,7 @@ const EMPLOYEE_POSITION= { x: 2.75,    y: 0.12,z: -0.7 };
 let isSlapping = false;
 let slapStartTime = 0;
 const SLAP_DURATION = 0.5; // seconds
-let empLeftShoulder, empRightShoulder;
+let bossLeftShoulder, bossRightShoulder;
 
 // Names for boss and employee
 let bossName = "Boss";
@@ -372,15 +372,14 @@ function init() {
     scene.add(model);
 
     mixer = new THREE.AnimationMixer(model);
-    let leftShoulder, rightShoulder;
     model.traverse(o => {
       if (o.isBone) {
-        if (o.name === 'Shoulder_L') leftShoulder = o;
-        if (o.name === 'Shoulder_R') rightShoulder = o;
+        if (o.name === 'Shoulder_L') bossLeftShoulder = o;
+        if (o.name === 'Shoulder_R') bossRightShoulder = o;
       }
     });
-    if (leftShoulder)  leftShoulder.rotation.y = Math.PI/2;
-    if (rightShoulder) rightShoulder.rotation.y = Math.PI/2;
+    if (bossLeftShoulder)  bossLeftShoulder.rotation.y = Math.PI/2;
+    if (bossRightShoulder) bossRightShoulder.rotation.y = Math.PI/2;
     model.rotation.y = Math.PI;
     checkAllModelsLoaded();
   });
@@ -446,18 +445,18 @@ function animate() {
       // Show slap effect
       const slapEffect = document.getElementById('slap-effect');
       if (model && slapEffect) {
-        // Get boss's mouth position (approximate)
-        const mouthPosition = new THREE.Vector3(
+        // Get boss's face position (approximate)
+        const facePosition = new THREE.Vector3(
           BOSS_POSITION.x,
           BOSS_POSITION.y + 1.7,
           BOSS_POSITION.z - 0.1
         );
         
         // Project 3D position to screen coordinates
-        mouthPosition.project(camera);
+        facePosition.project(camera);
         const container = document.querySelector('.game-canvas-container');
-        const x = (mouthPosition.x * 0.5 + 0.5) * container.clientWidth;
-        const y = (-(mouthPosition.y * 0.5) + 0.5) * container.clientHeight;
+        const x = (facePosition.x * 0.5 + 0.5) * container.clientWidth;
+        const y = (-(facePosition.y * 0.5) + 0.5) * container.clientHeight;
         
         // Position and show the effect
         slapEffect.style.left = `${x - 30}px`;
@@ -501,8 +500,8 @@ slapBtn.onclick = () => {
 function showFeedbackBar() {
   const feedbackBar = document.getElementById('feedback-bar');
   const bossBar = document.getElementById('boss-bar');
-  feedbackBar.textContent = bossName.toUpperCase() + ' JUST SLAPPED!';
-  bossBar.textContent = employeeName.toUpperCase() + '!';
+  feedbackBar.textContent = employeeName.toUpperCase() + ' JUST SLAPPED!';
+  bossBar.textContent = bossName.toUpperCase() + '!';
   feedbackBar.style.display = 'block';
   bossBar.style.display = 'block';
   feedbackBar.style.opacity = '1';
