@@ -35,125 +35,248 @@ function createNameInputCard() {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.95);
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: rgba(255, 255, 255, 0.98);
+    padding: clamp(16px, 4vw, 40px);
+    border-radius: clamp(16px, 4vw, 24px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     z-index: 1000;
-    min-width: 320px;
+    width: clamp(280px, 85vw, 400px);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    animation: popupFadeIn 0.4s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
   `;
+
+  // Add keyframe animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes popupFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+    @keyframes inputFocus {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .error-message {
+      color: #ff5252;
+      font-size: clamp(11px, 2.5vw, 12px);
+      margin-top: 4px;
+      display: none;
+      animation: shake 0.3s ease-in-out;
+      font-family: Arial, sans-serif;
+    }
+    .input-error {
+      border-color: #ff5252 !important;
+      animation: shake 0.3s ease-in-out;
+    }
+    @media (max-height: 600px) {
+      .input-card {
+        padding: 12px !important;
+      }
+      .input-title {
+        margin-bottom: 12px !important;
+        font-size: 20px !important;
+      }
+      .input-container {
+        margin-bottom: 12px !important;
+        gap: 8px !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 
   const title = document.createElement('h2');
   title.textContent = 'Enter Character Names';
   title.style.cssText = `
-    margin: 0 0 25px 0;
+    margin: 0 0 clamp(16px, 4vw, 30px) 0;
     color: #333;
-    font-size: 24px;
+    font-size: clamp(18px, 4vw, 28px);
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: 'Fredoka One', Arial, sans-serif;
+    background: linear-gradient(45deg, #ff5252, #ff9800);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    line-height: 1.2;
   `;
   card.appendChild(title);
 
   const inputContainer = document.createElement('div');
   inputContainer.style.cssText = `
-    margin-bottom: 25px;
+    margin-bottom: clamp(16px, 4vw, 30px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 3vw, 15px);
   `;
 
-  const bossInput = document.createElement('input');
-  bossInput.placeholder = 'Enter Boss Name';
-  bossInput.style.cssText = `
-    display: block;
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    outline: none;
-  `;
-  bossInput.addEventListener('focus', () => {
-    bossInput.style.borderColor = '#4CAF50';
-    bossInput.style.boxShadow = '0 0 0 3px rgba(76,175,80,0.1)';
-  });
-  bossInput.addEventListener('blur', () => {
-    bossInput.style.borderColor = '#e0e0e0';
-    bossInput.style.boxShadow = 'none';
-  });
-  inputContainer.appendChild(bossInput);
+  const createInput = (placeholder) => {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = `
+      position: relative;
+      margin-bottom: 2px;
+    `;
 
-  const employeeInput = document.createElement('input');
-  employeeInput.placeholder = 'Enter Employee Name';
-  employeeInput.style.cssText = `
-    display: block;
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    outline: none;
-  `;
-  employeeInput.addEventListener('focus', () => {
-    employeeInput.style.borderColor = '#4CAF50';
-    employeeInput.style.boxShadow = '0 0 0 3px rgba(76,175,80,0.1)';
-  });
-  employeeInput.addEventListener('blur', () => {
-    employeeInput.style.borderColor = '#e0e0e0';
-    employeeInput.style.boxShadow = 'none';
-  });
-  inputContainer.appendChild(employeeInput);
+    const input = document.createElement('input');
+    input.placeholder = placeholder;
+    input.style.cssText = `
+      display: block;
+      width: 100%;
+      padding: clamp(10px, 2.5vw, 16px);
+      border: 2px solid #e0e0e0;
+      border-radius: clamp(8px, 2vw, 12px);
+      font-size: clamp(14px, 3vw, 16px);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      outline: none;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      font-family: Arial, sans-serif;
+    `;
+
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    errorMessage.textContent = 'Please enter a name';
+    errorMessage.style.cssText = `
+      color: #ff5252;
+      font-size: clamp(11px, 2.5vw, 12px);
+      margin-top: 4px;
+      display: none;
+      font-family: Arial, sans-serif;
+    `;
+
+    input.addEventListener('focus', () => {
+      input.style.borderColor = '#ff5252';
+      input.style.boxShadow = '0 0 0 3px rgba(255,82,82,0.1)';
+      input.style.animation = 'inputFocus 0.3s forwards';
+      errorMessage.style.display = 'none';
+      input.classList.remove('input-error');
+    });
+
+    input.addEventListener('blur', () => {
+      if (!input.value.trim()) {
+        input.style.borderColor = '#e0e0e0';
+        input.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+      }
+      input.style.animation = 'none';
+    });
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(errorMessage);
+    return { wrapper, input, errorMessage };
+  };
+
+  const bossInput = createInput('Enter Boss Name');
+  const employeeInput = createInput('Enter Employee Name');
+
+  inputContainer.appendChild(bossInput.wrapper);
+  inputContainer.appendChild(employeeInput.wrapper);
   card.appendChild(inputContainer);
 
   const startButton = document.createElement('button');
   startButton.textContent = 'Start Game';
   startButton.style.cssText = `
     width: 100%;
-    padding: 14px 20px;
-    background: #4CAF50;
+    padding: clamp(12px, 3vw, 18px);
+    background: linear-gradient(45deg, #ff5252, #ff9800);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: clamp(8px, 2vw, 12px);
+    font-size: clamp(14px, 3vw, 18px);
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-family: 'Fredoka One', Arial, sans-serif;
+    box-shadow: 0 4px 15px rgba(255,82,82,0.3);
+    margin-top: clamp(8px, 2vw, 16px);
   `;
+
   startButton.addEventListener('mouseover', () => {
-    startButton.style.background = '#45a049';
     startButton.style.transform = 'translateY(-2px)';
-    startButton.style.boxShadow = '0 5px 15px rgba(76,175,80,0.3)';
+    startButton.style.boxShadow = '0 6px 20px rgba(255,82,82,0.4)';
   });
+
   startButton.addEventListener('mouseout', () => {
-    startButton.style.background = '#4CAF50';
     startButton.style.transform = 'translateY(0)';
-    startButton.style.boxShadow = 'none';
+    startButton.style.boxShadow = '0 4px 15px rgba(255,82,82,0.3)';
   });
+
+  startButton.addEventListener('mousedown', () => {
+    startButton.style.transform = 'translateY(1px)';
+  });
+
+  startButton.addEventListener('mouseup', () => {
+    startButton.style.transform = 'translateY(-2px)';
+  });
+
   startButton.onclick = () => {
-    bossName = bossInput.value || 'Boss';
-    employeeName = employeeInput.value || 'Employee';
-    document.body.removeChild(card);
-    init();
+    let isValid = true;
+
+    // Validate boss name
+    if (!bossInput.input.value.trim()) {
+      bossInput.input.classList.add('input-error');
+      bossInput.errorMessage.style.display = 'block';
+      isValid = false;
+    }
+
+    // Validate employee name
+    if (!employeeInput.input.value.trim()) {
+      employeeInput.input.classList.add('input-error');
+      employeeInput.errorMessage.style.display = 'block';
+      isValid = false;
+    }
+
+    if (isValid) {
+      bossName = bossInput.input.value.trim();
+      employeeName = employeeInput.input.value.trim();
+      
+      // Add fade out animation for the input card
+      card.style.animation = 'popupFadeOut 0.3s forwards';
+      
+      setTimeout(() => {
+        document.body.removeChild(card);
+        
+        // Show game wrapper with fade-in animation
+        const gameWrapper = document.getElementById('game-wrapper');
+        gameWrapper.classList.add('visible');
+        
+        // Initialize the game
+        init();
+      }, 300);
+    }
   };
+
   card.appendChild(startButton);
 
-  // Add a subtle animation when the card appears
-  card.style.opacity = '0';
-  card.style.transform = 'translate(-50%, -48%)';
+  // Add fade out animation
+  style.textContent += `
+    @keyframes popupFadeOut {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      to {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+      }
+    }
+  `;
+
   document.body.appendChild(card);
-  
-  // Trigger animation
-  requestAnimationFrame(() => {
-    card.style.transition = 'all 0.3s ease-out';
-    card.style.opacity = '1';
-    card.style.transform = 'translate(-50%, -50%)';
-  });
 }
 
 function init() {
@@ -161,7 +284,12 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
 
-  camera = new THREE.PerspectiveCamera( 75, 420/340, 0.1, 1000 );
+  // Get container dimensions
+  const container = document.querySelector('.game-canvas-container');
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+
+  camera = new THREE.PerspectiveCamera(75, containerWidth/containerHeight, 0.1, 1000);
   camera.position.x = 5;
   camera.position.y = 2;
 
@@ -189,13 +317,12 @@ function init() {
 
   // --- renderer with global clipping enabled ---
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(420, 340);
+  renderer.setSize(containerWidth, containerHeight);
   renderer.localClippingEnabled = true;
   renderer.clippingPlanes = [ globalClipPlane ];
 
-  // Place canvas in the new container
-  const canvasContainer = document.querySelector('.game-canvas-container');
-  canvasContainer.appendChild(renderer.domElement);
+  // Place canvas in the container
+  container.appendChild(renderer.domElement);
 
   
 
@@ -211,11 +338,12 @@ function init() {
 
   // --- model loader ---
   const loader = new THREE.GLTFLoader();
+  let modelsLoaded = 0;
+  const totalModels = 2; // We're loading 2 models
 
   function setupModelClipping(root) {
     root.traverse(obj => {
       if (obj.isMesh && obj.material) {
-        // apply clipping plane to each material
         obj.material.clippingPlanes = [ globalClipPlane ];
         obj.material.clipIntersection = true;
         obj.material.needsUpdate = true;
@@ -223,10 +351,22 @@ function init() {
     });
   }
 
+  function checkAllModelsLoaded() {
+    modelsLoaded++;
+    if (modelsLoaded === totalModels) {
+      // All models are loaded, hide the loading overlay
+      const loadingOverlay = document.getElementById('loading-overlay');
+      loadingOverlay.style.opacity = '0';
+      loadingOverlay.style.transition = 'opacity 0.5s ease-out';
+      setTimeout(() => {
+        loadingOverlay.style.display = 'none';
+      }, 500);
+    }
+  }
+
   // Load boss
   loader.load('/boss.glb', (gltf) => {
     model = gltf.scene;
-    // you can still nudge it up/down if needed:
     model.position.set(BOSS_POSITION.x, BOSS_POSITION.y, BOSS_POSITION.z);
     setupModelClipping(model);
     scene.add(model);
@@ -242,6 +382,7 @@ function init() {
     if (leftShoulder)  leftShoulder.rotation.y = Math.PI/2;
     if (rightShoulder) rightShoulder.rotation.y = Math.PI/2;
     model.rotation.y = Math.PI;
+    checkAllModelsLoaded();
   });
 
   // Load employee
@@ -260,6 +401,7 @@ function init() {
     });
     if (empLeftShoulder)  empLeftShoulder.rotation.y = Math.PI/2;
     if (empRightShoulder) empRightShoulder.rotation.y = Math.PI/2;
+    checkAllModelsLoaded();
   });
 
   window.addEventListener('resize', onWindowResize);
@@ -267,19 +409,23 @@ function init() {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const container = document.querySelector('.game-canvas-container');
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+
+  camera.aspect = containerWidth / containerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(containerWidth, containerHeight);
 }
 
 function animate() {
-  requestAnimationFrame( animate );
+  requestAnimationFrame(animate);
 
   const delta = clock.getDelta();
   if (mixer)          mixer.update(delta);
   if (employeeMixer)  employeeMixer.update(delta);
 
-  // slap animation…
+  // slap animation...
   if (isSlapping) {
     const elapsed = clock.getElapsedTime() - slapStartTime;
     const p = Math.min(elapsed / SLAP_DURATION, 1);
@@ -303,18 +449,19 @@ function animate() {
         // Get boss's mouth position (approximate)
         const mouthPosition = new THREE.Vector3(
           BOSS_POSITION.x,
-          BOSS_POSITION.y + 1.7, // Adjusted height to reach mouth level
-          BOSS_POSITION.z - 0.1  // Slightly forward to match face position
+          BOSS_POSITION.y + 1.7,
+          BOSS_POSITION.z - 0.1
         );
         
         // Project 3D position to screen coordinates
         mouthPosition.project(camera);
-        const x = (mouthPosition.x * 0.5 + 0.5) * 420; // Use container width
-        const y = (-(mouthPosition.y * 0.5) + 0.5) * 340; // Use container height
+        const container = document.querySelector('.game-canvas-container');
+        const x = (mouthPosition.x * 0.5 + 0.5) * container.clientWidth;
+        const y = (-(mouthPosition.y * 0.5) + 0.5) * container.clientHeight;
         
         // Position and show the effect
-        slapEffect.style.left = `${x - 30}px`; // Center the effect (60px width)
-        slapEffect.style.top = `${y - 30}px`; // Center the effect (60px height)
+        slapEffect.style.left = `${x - 30}px`;
+        slapEffect.style.top = `${y - 30}px`;
         slapEffect.style.display = 'block';
         slapEffect.style.opacity = '1';
         
@@ -332,11 +479,11 @@ function animate() {
       setTimeout(() => {
         hurtSound.currentTime = 0;
         hurtSound.play();
-      }, 100); // 100ms delay between sounds
+      }, 100);
     }
   }
 
-  renderer.render( scene, camera );
+  renderer.render(scene, camera);
 }
 
 // Use new slap button
